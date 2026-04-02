@@ -16,7 +16,7 @@ const loginUser = new LoginUser(userRepository);
 const authController = new AuthController(createUser, loginUser);
 const app = Fastify({ logger: true })
 
-app.register((instance) => authRoutes(instance, authController));
+app.register((instance) => authRoutes(instance, authController),{ prefix: '/api/v1/auth'});
 
 app.setErrorHandler(errorMiddleware);
 
