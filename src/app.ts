@@ -1,4 +1,5 @@
 import { AuthController } from "./interfaces/http/controllers/auth.controller";
+import { authRoutes } from "./interfaces/http/routes/auth.routes";
 import { CreateUser } from "./application/use-cases/CreateUser";
 import Fastify from "fastify";
 import { prisma } from "./infrastructure/database/client";
@@ -9,6 +10,8 @@ const createUser = new CreateUser(userRepository);
 const authController = new AuthController(createUser);
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 const app = Fastify({ logger: true })
+
+app.register((instance) => authRoutes(instance, authController));
 
 const start = async () => {
     try {
