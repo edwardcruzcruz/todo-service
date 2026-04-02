@@ -1,8 +1,11 @@
 import Fastify from "fastify";
 import dotenv from "dotenv";
+import { prisma } from "./infrastructure/database/client"
+import { UserRepository } from './infrastructure/repositories/UserRepository';
 
 dotenv.config();
 
+const userRepository = new UserRepository(prisma)
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 const app = Fastify({ logger: true })
 
