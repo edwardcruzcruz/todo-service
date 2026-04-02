@@ -5,16 +5,29 @@ import Fastify from "fastify";
 import { prisma } from "./infrastructure/database/client";
 import { UserRepository } from "./infrastructure/repositories/UserRepository";
 import { errorMiddleware } from "./interfaces/http/middlewares/error.middleware";
+import fastifyJwt from "@fastify/jwt";
+import { LoginUser } from "./application/use-cases/LoginUser";
+import { FastifyJwtAdapter } from "./utils/jwt";
 
+const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 const userRepository = new UserRepository(prisma);
 const createUser = new CreateUser(userRepository);
-const authController = new AuthController(createUser);
-const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
+const loginUser = new LoginUser(userRepository);
+const authController = new AuthController(createUser, loginUser);
 const app = Fastify({ logger: true })
 
 app.register((instance) => authRoutes(instance, authController));
 
 app.setErrorHandler(errorMiddleware);
+
+app.register(fastifyJwt, {
+    secret: process.env.JWT_SECRECT || "CHANGEENV",
+    sign:{
+        expiresIn: process.env.EXPIRESIN || '1h'
+    }
+});
+
+export const jwtAdapter = new FastifyJwtAdapter(app);
 
 const start = async () => {
     try {

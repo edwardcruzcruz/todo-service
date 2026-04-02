@@ -6,4 +6,5 @@ export const authRoutes = async (
     controller: AuthController
 ) => {
     fastify.post('/register', controller.register.bind(controller))
+    fastify.post('/login', controller.login.bind(controller))
 }
