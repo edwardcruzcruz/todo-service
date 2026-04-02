@@ -8,6 +8,7 @@ import { errorMiddleware } from "./interfaces/http/middlewares/error.middleware"
 import fastifyJwt from "@fastify/jwt";
 import { LoginUser } from "./application/use-cases/LoginUser";
 import { FastifyJwtAdapter } from "./utils/jwt";
+import cors from '@fastify/cors';
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 const userRepository = new UserRepository(prisma);
@@ -15,6 +16,12 @@ const createUser = new CreateUser(userRepository);
 const loginUser = new LoginUser(userRepository);
 const authController = new AuthController(createUser, loginUser);
 const app = Fastify({ logger: true })
+
+app.register(cors, {
+  origin: process.env.FRONTEND_URL ?? "http://localhost:5173", 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
 
 app.register((instance) => authRoutes(instance, authController),{ prefix: '/api/v1/auth'});
 
