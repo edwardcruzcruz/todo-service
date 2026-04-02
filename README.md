@@ -135,6 +135,7 @@ PORT=3000
 DATABASE_URL="postgresql://postgres:secret_password_here@localhost:5432/task_manager_db?schema=public"
 JWT_SECRET=tu_secreto_super_seguro
 EXPIRESIN=tu_duracion_token
+FRONTEND_URL=tu_servicio_url
 ```
 
 ### 5. Inicializar Prisma
