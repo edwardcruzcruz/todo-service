@@ -103,25 +103,48 @@ cd backend
 npm install
 ```
 
-### 3. Configurar variables de entorno
+### 3. Configurar infraestructura de Base de Datos (Docker)
+
+Antes de ejecutar la aplicación, es necesario levantar el motor de base de datos. Para este proyecto, utilizamos PostgreSQL mediante un contenedor de Docker para asegurar un entorno aislado y controlado.
+
+#### Levantar el contenedor:
+
+Ejecuta el siguiente comando en tu terminal para crear e iniciar la base de datos:
+
+```Bash
+docker run --name fastify-postgres \
+  -e POSTGRES_PASSWORD=secret_password_here \
+  -e POSTGRES_DB=task_manager_db \
+  -p 5432:5432 \
+  -d postgres
+```
+
+**Nota de seguridad:** El parámetro POSTGRES_PASSWORD define la contraseña del usuario root de la base de datos. Asegúrate de cambiar secret_password_here por una cadena segura en entornos que no sean de prueba local.
+
+
+### 4. Configurar variables de entorno
 
 Crea un archivo .env en la raíz con el siguiente contenido:
 
 Fragmento de código
-```PORT=3000
-DATABASE_URL="file:./dev.db" # Ejemplo para SQLite
+
+```
+PORT=3000
+# URL de conexión para Prisma 7
+# Estructura: protocolo://usuario:contraseña@host:puerto/nombre_db?schema=public
+DATABASE_URL="postgresql://postgres:secret_password_here@localhost:5432/task_manager_db?schema=public"
 JWT_SECRET=tu_secreto_super_seguro
 EXPIRESIN=tu_duracion_token
 ```
 
-### 4. Inicializar Prisma
+### 5. Inicializar Prisma
 
 ```Bash
 npx prisma generate
-npx prisma migrate dev --name init
+npx prisma migrate deploy
 ```
 
-### 5. Correr en modo desarrollo
+### 6. Correr en modo desarrollo
 
 ```Bash
 npm run dev
