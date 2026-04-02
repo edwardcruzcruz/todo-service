@@ -1,7 +1,6 @@
 import { IUser } from "../../domain/entities/IUser.interface";
 import { IUserRepository } from "../../domain/repositories/IUserRepository.interface";
 import { prisma } from "../database/client";
-import bcrypt from "bcrypt";
 
 export class UserRepository implements IUserRepository {
     constructor(private readonly prismaClient: typeof prisma) {}
@@ -13,12 +12,6 @@ export class UserRepository implements IUserRepository {
     }
 
     async createUser(userData: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
-        const hashedPassword = await bcrypt.hash(userData.password,10);
-        return this.prismaClient.user.create({
-                data: {
-                    ...userData,
-                    password: hashedPassword
-                }
-        });
+        return this.prismaClient.user.create({ data: userData });
     }
 }
