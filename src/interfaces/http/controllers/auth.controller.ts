@@ -6,11 +6,7 @@ export class AuthController {
     constructor(private readonly createUserUseCase: CreateUser) {}
 
     async register(req: FastifyRequest<{ Body: CreateUserBody }>, reply: FastifyReply) {
-        try {
-            const user = await this.createUserUseCase.execute(req.body);
-            return reply.send(user);
-        } catch (err) {
-            return reply.status(500).send({ error: 'Ocurrio un error, intentarlo mas tarde' })
-        }
+        const user = await this.createUserUseCase.execute(req.body);
+        return reply.send(user);
     }
 }
