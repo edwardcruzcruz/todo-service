@@ -1,9 +1,10 @@
-import { UserRepository } from "../../infrastructure/repositories/UserRepository";
 import { AppError } from "../../interfaces/http/middlewares/AppError";
 import bcrypt from 'bcrypt';
+import { ILoginUser } from "./ILoginUser";
+import { IUserRepository } from "../../domain/repositories/IUserRepository.interface";
 
-export class LoginUser {
-    constructor(private userRepository: UserRepository) {}
+export class LoginUser implements ILoginUser{
+    constructor(private userRepository: IUserRepository) {}
 
     async execute(email:string, password: string) {
         const existingUser = await this.userRepository.findByEmail(email);
