@@ -103,25 +103,6 @@ cd backend
 npm install
 ```
 
-### 3. Configurar infraestructura de Base de Datos (Docker)
-
-Antes de ejecutar la aplicación, es necesario levantar el motor de base de datos. Para este proyecto, utilizamos PostgreSQL mediante un contenedor de Docker para asegurar un entorno aislado y controlado.
-
-#### Levantar el contenedor:
-
-Ejecuta el siguiente comando en tu terminal para crear e iniciar la base de datos:
-
-```Bash
-docker run --name fastify-postgres \
-  -e POSTGRES_PASSWORD=secret_password_here \
-  -e POSTGRES_DB=task_manager_db \
-  -p 5432:5432 \
-  -d postgres
-```
-
-**Nota de seguridad:** El parámetro POSTGRES_PASSWORD define la contraseña del usuario root de la base de datos. Asegúrate de cambiar secret_password_here por una cadena segura en entornos que no sean de prueba local.
-
-
 ### 4. Configurar variables de entorno
 
 Crea un archivo .env en la raíz con el siguiente contenido:
@@ -130,24 +111,56 @@ Fragmento de código
 
 ```
 PORT=3000
-# URL de conexión para Prisma 7
-# Estructura: protocolo://usuario:contraseña@host:puerto/nombre_db?schema=public
-DATABASE_URL="postgresql://postgres:secret_password_here@localhost:5432/task_manager_db?schema=public"
-JWT_SECRET=tu_secreto_super_seguro
-EXPIRESIN=tu_duracion_token
-FRONTEND_URL=tu_servicio_url
+
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password
+POSTGRES_DB=todo
+
+#URL de conexión para Prisma (usada por la app para conectar al contenedor 'db')
+DATABASE_URL="postgresql://postgres:password@db:5432/todo?schema=public"
+
+JWT_SECRECT=SECRET_CODE_HERE
+EXPIRESIN=1h
+FRONTEND_URL=http://localhost:5173
 ```
 
-### 5. Inicializar Prisma
+### 3. Ejecución con Docker (Recomendado 🚀)
+La forma más rápida de iniciar el proyecto es utilizando Docker Compose. Esto levantará automáticamente la base de datos PostgreSQL y la API de Fastify.
 
-```Bash
-npx prisma generate
-npx prisma migrate deploy
+```bash
+# Construir e iniciar los servicios
+docker-compose up --build
+```
+Nota: El contenedor de la API ejecutará automáticamente npx prisma migrate deploy al iniciar para asegurar que la base de datos esté actualizada.
+
+### 4. Alternativa: Ejecución Local (Desarrollo)
+Si prefieres ejecutar solo la base de datos en Docker y la aplicación en tu entorno local para debuguear:
+
+#### 1. Levantar solo la DB:
+
+```bash
+# Solo iniciar la base PostgreSQL
+docker-compose up db -d
 ```
 
-### 6. Correr en modo desarrollo
+#### 2. Actualizar DATABASE_URL
 
-```Bash
+Cambia db por localhost en tu archivo .env:
+
+```
+DATABASE_URL="postgresql://postgres:password@localhost:5432/todo?schema=public"
+```
+
+#### 3. Preparar y Sincronizar:
+
+```bash
+npx prisma migrate dev
+npm run dev
+```
+
+#### 4. Correr servidor:
+
+```bash
 npm run dev
 ```
 
