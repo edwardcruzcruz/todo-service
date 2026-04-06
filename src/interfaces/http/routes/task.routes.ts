@@ -10,4 +10,5 @@ export const taskRoutes = async (
     fastify.addHook('preHandler', authenticate)
 
     fastify.post('/', controller.create.bind(controller))
+    fastify.get('/', controller.get.bind(controller))
 }
