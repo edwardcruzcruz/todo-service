@@ -5,8 +5,11 @@ import { prisma } from "../database/client";
 export class TaskRepository implements ITaskRepository {
     constructor(private readonly prismaClient: typeof prisma) {}
 
-    async all(){
-        return await this.prismaClient.task.findMany();
+    async all(userId?: string){
+        return await this.prismaClient.task.findMany({
+            where: userId ? { user_id: userId } : {}, 
+            orderBy: { created_at: 'desc' }
+        });
     }
 
     async findById(id: string): Promise<ITask | null> {

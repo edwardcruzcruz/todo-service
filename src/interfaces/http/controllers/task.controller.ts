@@ -17,7 +17,8 @@ export class TaskController {
     ) {}
 
     async get(req: FastifyRequest, reply: FastifyReply) {
-        const tasks = await this.getAllTasksUserCase.execute();
+        const user = req.user as { userId: string } | undefined;
+        const tasks = await this.getAllTasksUserCase.execute(user?.userId);
         return reply.send(tasks);
     }
 
