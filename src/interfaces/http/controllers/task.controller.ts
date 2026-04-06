@@ -28,7 +28,8 @@ export class TaskController {
     }
 
     async create(req: FastifyRequest<{ Body: CreateTaskBody }>, reply: FastifyReply) {
-        const task = await this.createTaskUserCase.execute(req.body);
+        const user = req.user as { userId: string };
+        const task = await this.createTaskUserCase.execute(req.body,user.userId);
         return reply.send(task);
     }
 
