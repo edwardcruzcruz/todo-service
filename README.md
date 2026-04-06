@@ -88,6 +88,58 @@ Body (JSON):
 }
 ```
 
+### 3. listar tares usuario autenticado
+```
+GET /api/v1/tasks
+```
+Valida existencia y validez del token, listando las tareas del usuario autenticado.
+
+### 4. Obtener tarea por Id
+```
+GEY /api/v1/tasks/:id
+```
+Valida existencia y validez del token, obtiene tarea por id
+
+### 5. Crear tarea
+```
+POST /api/v1/tasks
+```
+Valida existencia y validez del token, crea tarea
+
+Body (JSON):
+
+```json
+{
+    "title": "task - 1",
+    "description": "task 1",
+    "completed": false,
+    "user_id": "6cc240d4-94bc-40b1-818c-2d9c38dc851c"
+}
+```
+
+### 6. Actualizar tarea
+```
+PUT /api/v1/tasks/:id
+```
+Valida existencia y validez del token, actualiza tarea
+
+Body (JSON):
+
+```json
+{
+    "title": "task - 2",
+    "description": null,
+    "completed": false
+}
+```
+
+### 7. Eliminar tarea
+```
+DELETE /api/v1/tasks/:id
+```
+Valida existencia y validez del token, elimina tarea
+
+
 ## ⚙️ Instalación y Uso
 
 ### 1. Clonar el repositorio
@@ -154,8 +206,8 @@ DATABASE_URL="postgresql://postgres:password@localhost:5432/todo?schema=public"
 #### 3. Preparar y Sincronizar:
 
 ```bash
-npx prisma migrate dev
-npm run dev
+npx prisma generate
+npx prisma migrate deploy
 ```
 
 #### 4. Correr servidor:
