@@ -11,7 +11,17 @@ export class UserRepository implements IUserRepository {
         return user;
     }
 
-    async createUser(userData: Omit<IUser, 'id' | 'createdAt' | 'updatedAt'>): Promise<IUser> {
-        return this.prismaClient.user.create({ data: userData });
+    async createUser(userData: Omit<IUser, 'id' | 'created_at'>): Promise<IUser> {
+        const { tasks, ...cleanData } = userData;
+        return this.prismaClient.user.create({ data: 
+            {
+                ...cleanData
+            }
+        });
+    }
+
+    async findById(id: string): Promise<IUser | null> {
+        const user = await this.prismaClient.user.findUnique({ where: {id} });
+        return user || null; 
     }
 }

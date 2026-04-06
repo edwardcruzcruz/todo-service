@@ -9,12 +9,22 @@ import fastifyJwt from "@fastify/jwt";
 import { LoginUser } from "./application/use-cases/LoginUser";
 import { FastifyJwtAdapter } from "./utils/jwt";
 import cors from '@fastify/cors';
+import { TaskRepository } from './infrastructure/repositories/TaskRepository';
+import { CreateTask } from "./application/use-cases/CreateTask";
+import { TaskController } from "./interfaces/http/controllers/task.controller";
+import { taskRoutes } from "./interfaces/http/routes/task.routes";
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
+
 const userRepository = new UserRepository(prisma);
 const createUser = new CreateUser(userRepository);
 const loginUser = new LoginUser(userRepository);
 const authController = new AuthController(createUser, loginUser);
+
+const taskRepository = new TaskRepository(prisma);
+const createTask = new CreateTask(taskRepository,userRepository);
+const taskController = new TaskController(createTask);
+
 const app = Fastify({ logger: true })
 
 app.register(cors, {
@@ -24,6 +34,7 @@ app.register(cors, {
 });
 
 app.register((instance) => authRoutes(instance, authController),{ prefix: '/api/v1/auth'});
+app.register((instance) => taskRoutes(instance, taskController),{ prefix: '/api/v1/tasks'});
 
 app.setErrorHandler(errorMiddleware);
 
