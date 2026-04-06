@@ -13,4 +13,5 @@ export const taskRoutes = async (
     fastify.get('/', controller.get.bind(controller))
     fastify.get('/:id', controller.getById.bind(controller))
     fastify.put('/:id', controller.update.bind(controller))
+    fastify.delete('/:id', controller.delete.bind(controller))
 }

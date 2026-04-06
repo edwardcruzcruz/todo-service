@@ -16,6 +16,7 @@ import { taskRoutes } from "./interfaces/http/routes/task.routes";
 import { GetAllTasks } from "./application/use-cases/GetAllTasks";
 import { GetTaskById } from "./application/use-cases/GetTaskById";
 import { UpdateTask } from "./application/use-cases/UpdateTask";
+import { DeleteTask } from "./application/use-cases/DeleteTask";
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 
@@ -29,7 +30,8 @@ const createTask = new CreateTask(taskRepository,userRepository);
 const getAllTasks = new GetAllTasks(taskRepository);
 const getTaskById = new GetTaskById(taskRepository);
 const updateTask = new UpdateTask(taskRepository);
-const taskController = new TaskController(createTask,getAllTasks,getTaskById,updateTask);
+const deleteTask = new DeleteTask(taskRepository);
+const taskController = new TaskController(createTask,getAllTasks,getTaskById,updateTask,deleteTask);
 
 const app = Fastify({ logger: true })
 
