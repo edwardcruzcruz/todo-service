@@ -14,6 +14,7 @@ import { CreateTask } from "./application/use-cases/CreateTask";
 import { TaskController } from "./interfaces/http/controllers/task.controller";
 import { taskRoutes } from "./interfaces/http/routes/task.routes";
 import { GetAllTasks } from "./application/use-cases/GetAllTasks";
+import { GetTaskById } from "./application/use-cases/GetTaskById";
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT): 3000;
 
@@ -25,7 +26,8 @@ const authController = new AuthController(createUser, loginUser);
 const taskRepository = new TaskRepository(prisma);
 const createTask = new CreateTask(taskRepository,userRepository);
 const getAllTasks = new GetAllTasks(taskRepository);
-const taskController = new TaskController(createTask,getAllTasks);
+const getTaskById = new GetTaskById(taskRepository);
+const taskController = new TaskController(createTask,getAllTasks,getTaskById);
 
 const app = Fastify({ logger: true })
 
